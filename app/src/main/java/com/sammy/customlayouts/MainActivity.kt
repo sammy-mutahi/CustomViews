@@ -39,7 +39,10 @@ fun MyCanvas(){
     Canvas(modifier = Modifier
         .padding(20.dp)
         .size(300.dp)){
-
+        drawRect(
+            color = Color.Black,
+            size = size
+        )
         drawRect(
             color = Color.Red,
             topLeft = Offset(100f,100f),
