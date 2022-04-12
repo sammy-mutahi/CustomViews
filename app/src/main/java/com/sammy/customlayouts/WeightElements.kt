@@ -3,29 +3,30 @@ package com.sammy.customlayouts
 import android.graphics.Color
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.withRotation
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 @Composable
 fun Scale(
     modifier: Modifier = Modifier,
     style: ScaleStyle = ScaleStyle(),
-    minweight: Int = 20,
-    maxweight: Int = 250,
-    initialWeight: Int = 80,
+    minweight: Int = 50,
+    maxweight: Int = 100,
+    initialWeight: Int = 60,
     onWeightChange: (Int) -> Unit
 ) {
     val radius = style.radius
@@ -36,10 +37,47 @@ fun Scale(
     var circleCenter by remember {
         mutableStateOf(Offset.Zero)
     }
-    val angle by remember {
+    var angle by remember {
         mutableStateOf(0f)
     }
-    Canvas(modifier = modifier) {
+
+    var dragStartAngle by remember {
+        mutableStateOf(0f)
+    }
+
+    var oldAngle by remember {
+        mutableStateOf(angle)
+    }
+
+    Canvas(modifier = modifier
+        .pointerInput(true){
+            detectDragGestures(
+                onDragStart = {offset ->
+                    dragStartAngle = -atan2(
+                        circleCenter.x - offset.x,
+                        circleCenter.y - offset.y
+                    ) * (180f / PI.toFloat())
+                },
+                onDragEnd = {
+                    oldAngle = angle
+                }
+            ) { change, _ ->
+                //current touch position
+                val touchAngle = -atan2(
+                    circleCenter.x - change.position.x,
+                    circleCenter.y - change.position.y
+                ) * (180f / PI.toFloat())
+                val newAngle = oldAngle + (touchAngle - dragStartAngle)
+
+                angle = newAngle.coerceIn(
+                    minimumValue = initialWeight - maxweight.toFloat(),
+                    maximumValue = initialWeight - minweight.toFloat()
+                )
+
+                onWeightChange.invoke((initialWeight - angle).toInt())
+            }
+        }
+    ) {
         center = this.center
         circleCenter = Offset(center.x, scaleWidth.toPx() / 2f + radius.toPx())
         val outerRadius = radius.toPx() + scaleWidth.toPx() / 2f
@@ -111,6 +149,7 @@ fun Scale(
 
                 }
             }
+
             drawLine(
                 color = lineColor,
                 start = lineStart,
@@ -118,7 +157,30 @@ fun Scale(
                 strokeWidth = 1.dp.toPx()
             )
 
+            val middleTop = Offset(
+                x = circleCenter.x,
+                y = circleCenter.y - innerRadius - style.scaleIndicatorLength.toPx()
+            )
 
+            val bottomLeft = Offset(
+                x = circleCenter.x - 4f,
+                y = circleCenter.y - innerRadius
+            )
+
+            val bottomRight = Offset(
+                x = circleCenter.x + 4f,
+                y = circleCenter.y - innerRadius
+            )
+            val indicator = Path().apply {
+                moveTo(middleTop.x, middleTop.y)
+                lineTo(bottomLeft.x, bottomLeft.y)
+                lineTo(bottomRight.x, bottomRight.y)
+                lineTo(middleTop.x, middleTop.y)
+            }
+            drawPath(
+                path = indicator,
+                color = style.scaleIndicatorColor
+            )
         }
     }
 }
@@ -126,6 +188,9 @@ fun Scale(
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
+    var weight by remember {
+        mutableStateOf(80)
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Scale(
             style = ScaleStyle(
@@ -133,9 +198,10 @@ fun DefaultPreview() {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.Center)
+                .height(300.dp)
+                .align(Alignment.BottomCenter)
         ) {
-
+            weight = it
         }
     }
 }
