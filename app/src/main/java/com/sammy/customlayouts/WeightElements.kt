@@ -13,7 +13,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.withRotation
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -86,12 +88,36 @@ fun Scale(
                 x = (outerRadius) * cos(angleInRad) + circleCenter.x,
                 y = (outerRadius) * sin(angleInRad) + circleCenter.y
             )
+            drawContext.canvas.nativeCanvas.apply {
+                if (lineType is LineType.Tenstep) {
+                    val textRadius = outerRadius - lineLength - 5.dp.toPx() - style.textSize.toPx()
+                    val x = textRadius * cos(angleInRad) + circleCenter.x
+                    val y = textRadius * sin(angleInRad) + circleCenter.y
+                    withRotation(
+                        degrees = angleInRad * (180f / PI.toFloat()) + 90f,
+                        pivotX = x,
+                        pivotY = y
+                    ) {
+                        drawText(
+                            abs(i).toString(),
+                            x,
+                            y,
+                            Paint().apply {
+                                textSize = style.textSize.toPx()
+                                textAlign = Paint.Align.CENTER
+                            }
+                        )
+                    }
+
+                }
+            }
             drawLine(
                 color = lineColor,
                 start = lineStart,
                 end = lineEnd,
                 strokeWidth = 1.dp.toPx()
             )
+
 
         }
     }
