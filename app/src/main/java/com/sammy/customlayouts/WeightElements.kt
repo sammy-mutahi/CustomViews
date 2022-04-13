@@ -24,13 +24,14 @@ import kotlin.math.*
 fun Scale(
     modifier: Modifier = Modifier,
     style: ScaleStyle = ScaleStyle(),
-    minweight: Int = 50,
-    maxweight: Int = 100,
+    minWeight: Int = 20,
+    maxWeight: Int = 250,
     initialWeight: Int = 60,
     onWeightChange: (Int) -> Unit
 ) {
     val radius = style.radius
     val scaleWidth = style.scaleWidth
+
     var center by remember {
         mutableStateOf(Offset.Zero)
     }
@@ -41,7 +42,7 @@ fun Scale(
         mutableStateOf(0f)
     }
 
-    var dragStartAngle by remember {
+    var dragStartedAngle by remember {
         mutableStateOf(0f)
     }
 
@@ -50,10 +51,10 @@ fun Scale(
     }
 
     Canvas(modifier = modifier
-        .pointerInput(true){
+        .pointerInput(true) {
             detectDragGestures(
-                onDragStart = {offset ->
-                    dragStartAngle = -atan2(
+                onDragStart = { offset ->
+                    dragStartedAngle = -atan2(
                         circleCenter.x - offset.x,
                         circleCenter.y - offset.y
                     ) * (180f / PI.toFloat())
@@ -67,11 +68,11 @@ fun Scale(
                     circleCenter.x - change.position.x,
                     circleCenter.y - change.position.y
                 ) * (180f / PI.toFloat())
-                val newAngle = oldAngle + (touchAngle - dragStartAngle)
+                val newAngle = oldAngle + (touchAngle - dragStartedAngle)
 
                 angle = newAngle.coerceIn(
-                    minimumValue = initialWeight - maxweight.toFloat(),
-                    maximumValue = initialWeight - minweight.toFloat()
+                    minimumValue = initialWeight - maxWeight.toFloat(),
+                    maximumValue = initialWeight - minWeight.toFloat()
                 )
 
                 onWeightChange.invoke((initialWeight - angle).toInt())
@@ -101,7 +102,7 @@ fun Scale(
             )
         }
         //Draw lines
-        for (i in minweight..maxweight) {
+        for (i in minWeight..maxWeight) {
             val angleInRad = (i - initialWeight + angle - 90) * (PI / 180f).toFloat()
             val lineType = when {
                 i % 10 == 0 -> LineType.Tenstep
