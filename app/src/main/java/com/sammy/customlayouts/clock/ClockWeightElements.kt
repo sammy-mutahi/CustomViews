@@ -1,30 +1,33 @@
 package com.sammy.customlayouts.clock
 
-import android.graphics.Color
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.graphics.withRotation
 import com.sammy.customlayouts.LineType
+import java.time.Clock
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
-fun Scale(
+fun Clock(
     modifier: Modifier = Modifier,
-    minTime:Int = 1,
-    maxTime:Int = 60,
-    initialTime:Int = 6,
+    seconds:Float = 0f,
+    minutes:Float = 0f,
+    hours:Float = 0f,
     style: ClockScaleStyle = ClockScaleStyle()
 ) {
     val radius = style.radius
@@ -38,15 +41,10 @@ fun Scale(
         mutableStateOf(Offset.Zero)
     }
 
-    var angle by remember {
-        mutableStateOf(0f)
-    }
-
-    Canvas(modifier = modifier) {
+    Canvas(modifier = modifier.size(radius * 2f)) {
         center = this.center
         circleCenter = Offset(center.x, scaleWidth.toPx() / 2f + radius.toPx())
         val outerRadius = radius.toPx() + scaleWidth.toPx() / 2f
-        val innerRadius = radius.toPx() - scaleWidth.toPx() / 2f
 
         drawContext.canvas.nativeCanvas.apply {
             drawCircle(
@@ -54,32 +52,32 @@ fun Scale(
                 radius.toPx(),
                 Paint().apply {
                     strokeWidth = scaleWidth.toPx()
-                    color = Color.WHITE
+                    color = android.graphics.Color.WHITE
                     setStyle(
                         Paint.Style.STROKE
                     )
                     setShadowLayer(
                         200f,
                         0f, 0f,
-                        Color.argb(50, 0, 0, 0)
+                        android.graphics.Color.argb(50, 0, 0, 0)
                     )
                 }
             )
         }
 
-        for (i in minTime..maxTime){
-            val angleInRad = (i - initialTime + angle) * (PI/ 30).toFloat()
+        for (i in 1..60){
+            val angleInRad = (i * (360f / 60f) - 90)* (PI.toFloat() / 180f)
             val lineType = when{
-                i % 5 == 0 -> LineType.FiveStep
-                else -> LineType.Normal
+                i % 5 == 0 -> ClockLineType.FiveStep
+                else -> ClockLineType.Normal
             }
 
             val lineLength = when(lineType){
-                LineType.FiveStep -> style.fiveStepLineLength.toPx()
+                ClockLineType.FiveStep -> style.fiveStepLineLength.toPx()
                 else -> style.normalLineLength.toPx()
             }
             val lineColor = when(lineType){
-                LineType.FiveStep -> style.fiveStepLineColor
+                ClockLineType.FiveStep -> style.fiveStepLineColor
                 else -> style.nomarmalLineColor
             }
 
@@ -92,6 +90,26 @@ fun Scale(
                 x = outerRadius * cos(angleInRad) + circleCenter.x,
                 y = outerRadius * sin(angleInRad) + circleCenter.y
             )
+            drawContext.canvas.nativeCanvas.apply {
+                if (lineType is ClockLineType.FiveStep){
+                    val textRadius = outerRadius - lineLength - 5.dp.toPx() - 18.sp.toPx()
+                    val x = textRadius * cos(angleInRad) + circleCenter.x
+                    val y = textRadius * sin(angleInRad) + circleCenter.y
+                    withRotation(degrees = angleInRad,
+                        pivotX = x,
+                        pivotY = y){
+                        drawText(
+                            abs(i/5).toString(),
+                            x,
+                            y,
+                            Paint().apply {
+                                textSize = 18.sp.toPx()
+                                textAlign = Paint.Align.CENTER
+                            }
+                        )
+                    }
+                }
+            }
 
             drawLine(
                 color = lineColor,
@@ -99,6 +117,38 @@ fun Scale(
                 end = lineEnd,
                 strokeWidth = 1.dp.toPx()
             )
+
+            //seconds
+            rotate(degrees = seconds * (360f / 60f)){
+                drawLine(
+                    color = Color.Red,
+                    start = circleCenter,
+                    end = Offset(circleCenter.x, 20.dp.toPx()),
+                    strokeWidth = 1.dp.toPx(),
+                    cap = StrokeCap.Round
+                )
+            }
+
+            //minutes
+            rotate(degrees = minutes * (360f / 60f)){
+                drawLine(
+                    color = Color.Black,
+                    start = circleCenter,
+                    end = Offset(circleCenter.x, 20.dp.toPx()),
+                    strokeWidth = 2.dp.toPx(),
+                    cap = StrokeCap.Round,
+                )
+            }
+            //hours
+            rotate(degrees = hours * (360f / 12f)){
+                drawLine(
+                    color = Color.Black,
+                    start = circleCenter,
+                    end = Offset(circleCenter.x, 20.dp.toPx()),
+                    strokeWidth = 3.dp.toPx(),
+                    cap = StrokeCap.Round
+                )
+            }
         }
     }
 }
@@ -108,7 +158,7 @@ fun Scale(
 fun DefaultPreview() {
     Box(modifier = Modifier.fillMaxSize()
     ) {
-        Scale(
+        Clock(
             modifier = Modifier
                 .align(Alignment.Center)
                 .height(300.dp)
