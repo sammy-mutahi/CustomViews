@@ -4,10 +4,28 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/compose-model-1649319847271.xml" value="0.31925675675675674" />
-        <entry key="../../../../layout/compose-model-1649319879034.xml" value="1.0" />
+        <entry key="../../../../layout/compose-model-1649319879034.xml" value="0.33" />
+        <entry key="../../../../layout/compose-model-1649327969936.xml" value="0.17778716216216217" />
+        <entry key="../../../../layout/compose-model-1649349290202.xml" value="0.17863175675675674" />
+        <entry key="../../../../layout/compose-model-1649349930446.xml" value="0.14814814814814814" />
+        <entry key="../../../../layout/compose-model-1649350148570.xml" value="0.33" />
+        <entry key="../../../../layout/compose-model-1649395871371.xml" value="0.3101851851851852" />
+        <entry key="../../../../layout/compose-model-1649744216507.xml" value="0.3101851851851852" />
+        <entry key="../../../../layout/compose-model-1649752277230.xml" value="0.2934966216216216" />
+        <entry key="../../../../layout/compose-model-1649829865033.xml" value="0.2934966216216216" />
+        <entry key="../../../../layout/compose-model-1650348296108.xml" value="0.3264358108108108" />
+        <entry key="../../../../layout/compose-model-1650349041791.xml" value="0.3264358108108108" />
+        <entry key="../../../../layout/compose-model-1650358937768.xml" value="0.22086148648648649" />
+        <entry key="../../../../layout/compose-model-1650440682253.xml" value="0.22086148648648649" />
+        <entry key="../../../../layout/compose-model-1650441391086.xml" value="0.3188344594594595" />
+        <entry key="../../../../layout/compose-model-1650441470325.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1650441474834.xml" value="0.23226351351351351" />
+        <entry key="../../../../layout/compose-model-1650612009350.xml" value="0.3188344594594595" />
+        <entry key="../../../../layout/compose-model-1650618077788.xml" value="0.31798986486486486" />
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
