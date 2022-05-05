@@ -1,54 +1,106 @@
 package com.sammy.customlayouts.paths
 
-import android.graphics.Paint
+import android.graphics.PathMeasure
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sammy.customlayouts.ui.theme.CustomLayoutsTheme
+import kotlin.math.PI
+import kotlin.math.atan2
+import androidx.compose.ui.graphics.drawscope.rotate
 
 class PathActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SimplePaths()
+            PathAnimation()
         }
     }
 }
 
 @Composable
-fun PathAnimation(){
+fun PathAnimation() {
+    val pathPortion = remember {
+        androidx.compose.animation.core.Animatable(initialValue = 0f)
+    }
+    LaunchedEffect(key1 = true) {
+        pathPortion.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 5000
+            )
+        )
+    }
+    val path = Path().apply {
+        moveTo(100f, 100f)
+        quadraticBezierTo(400f, 400f, 100f, 400f)
+    }
+    val outPath = android.graphics.Path()
+    val pos = FloatArray(2)
+    val tan = FloatArray(2)
+    PathMeasure().apply {
+        setPath(path.asAndroidPath(), false)
+        getSegment(0f, pathPortion.value * length, outPath,true)
+        getPosTan(pathPortion.value * length,pos,tan)
 
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val x = pos[0]
+        val y = pos[1]
+        val degrees = -atan2(tan[0],tan[1])* (180f / PI.toFloat()) - 180f
+
+        rotate(degrees = degrees, pivot = Offset(x,y)){
+            drawPath(
+                path = Path().apply {
+                    moveTo(x, y-30f)
+                    lineTo(x-30f, y+60f)
+                    lineTo(x+30f, y+60f)
+                    close()
+                },
+                color = Color.Red
+            )
+        }
+
+        /*drawPath(
+            path = outPath.asComposePath(),
+            color = Color.Red,
+            style = Stroke(width = 5.dp.toPx())
+        )*/
+
+    }
 }
 
 @Composable
-fun PathOperations(){
-    Canvas(modifier = Modifier.fillMaxSize()){
+fun PathOperations() {
+    Canvas(modifier = Modifier.fillMaxSize()) {
         val squareWithoutOperations = Path().apply {
-            addRect(Rect(Offset(200f,200f), Size(200f,200f)))
+            addRect(Rect(Offset(200f, 200f), Size(200f, 200f)))
         }
         val circle = Path().apply {
-            addOval(Rect(Offset(200f,200f),100f))
+            addOval(Rect(Offset(200f, 200f), 100f))
         }
         val pathWithOperation = Path().apply {
-            op(squareWithoutOperations,circle, PathOperation.Xor)
+            op(squareWithoutOperations, circle, PathOperation.Xor)
         }
         drawPath(
             path = squareWithoutOperations,
-            color= Color.Red,
+            color = Color.Red,
             style = Stroke(width = 2.dp.toPx())
         )
         drawPath(
@@ -64,26 +116,57 @@ fun PathOperations(){
 }
 
 @Composable
-private fun SimplePaths(){
+fun PathEffects(){
+    val infiniteTransition = rememberInfiniteTransition()
+    val phase by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 10000f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(60000, easing = LinearEasing )
+        )
+    )
     Canvas(modifier = Modifier.fillMaxSize()){
+        val path = Path().apply {
+            moveTo(100f,100f)
+            cubicTo(100f,300f,600f,700f,600f,1100f)
+        }
+        drawPath(
+            path = path,
+            color = Color.Red,
+            style = Stroke(
+                width = 5.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(
+                    intervals = floatArrayOf(50f,30f),
+                    phase = phase
+                )
+            )
+        )
+    }
+}
+
+@Composable
+private fun SimplePaths() {
+    Canvas(modifier = Modifier.fillMaxSize()) {
         val path = Path().apply {
             moveTo(100f, 100f)
             lineTo(100f, 500f)
-            lineTo(500f,500f)
+            lineTo(500f, 500f)
+            lineTo(500f,100f)
+            lineTo(100f,100f)
             /*quadraticBezierTo(
                 800f,
                 300f,
                 500f,100f
             )*/
-            cubicTo(800f,500f,800f,100f,500f,100f)
-           // close()
+           // cubicTo(800f, 500f, 800f, 100f, 500f, 100f)
+            // close()
         }
         drawPath(
             path = path,
             color = Color.Black,
             style = Stroke(
                 width = 5.dp.toPx(),
-                cap = StrokeCap.Round
+                cap = StrokeCap.Round,
             )
         )
     }
@@ -91,8 +174,8 @@ private fun SimplePaths(){
 
 @Preview(showBackground = true)
 @Composable
-fun Preview(){
-    CustomLayoutsTheme{
-        PathOperations()
+fun Preview() {
+    CustomLayoutsTheme {
+        PathEffects()
     }
 }
