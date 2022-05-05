@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.nativeCanvas
@@ -119,13 +120,16 @@ fun Clock(
             )
 
             //seconds
+            val pos = FloatArray(2)
+            val x = pos[0]
+            val y = pos[1]
             rotate(degrees = seconds * (360f / 60f)){
                 drawLine(
                     color = Color.Red,
                     start = circleCenter,
                     end = Offset(circleCenter.x, 20.dp.toPx()),
                     strokeWidth = 1.dp.toPx(),
-                    cap = StrokeCap.Round
+                    cap = StrokeCap.Round,
                 )
             }
 
