@@ -1,5 +1,6 @@
 package com.sammy.customlayouts.paths
 
+import android.graphics.Paint
 import android.graphics.PathMeasure
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,13 +17,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sammy.customlayouts.ui.theme.CustomLayoutsTheme
 import kotlin.math.PI
 import kotlin.math.atan2
-import androidx.compose.ui.graphics.drawscope.rotate
 
 class PathActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,11 +137,33 @@ fun PathEffects(){
             style = Stroke(
                 width = 5.dp.toPx(),
                 pathEffect = PathEffect.dashPathEffect(
-                    intervals = floatArrayOf(50f,30f),
+                    intervals = floatArrayOf(50f, 30f),
                     phase = phase
                 )
             )
         )
+    }
+}
+
+@Composable
+fun PathText() {
+    val path = android.graphics.Path().apply {
+        moveTo(200f, 800f)
+        quadTo(600f, 400f, 1000f, 800f)
+    }
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawContext.canvas.nativeCanvas.apply {
+            drawTextOnPath(
+                "Hello World",
+                path,
+                30f,
+                50f,
+                Paint().apply {
+                    color = android.graphics.Color.RED
+                    textSize = 70f
+                }
+            )
+        }
     }
 }
 
@@ -151,8 +174,8 @@ private fun SimplePaths() {
             moveTo(100f, 100f)
             lineTo(100f, 500f)
             lineTo(500f, 500f)
-            lineTo(500f,100f)
-            lineTo(100f,100f)
+            lineTo(500f, 100f)
+            lineTo(100f, 100f)
             /*quadraticBezierTo(
                 800f,
                 300f,
@@ -176,6 +199,6 @@ private fun SimplePaths() {
 @Composable
 fun Preview() {
     CustomLayoutsTheme {
-        PathEffects()
+        PathText()
     }
 }
