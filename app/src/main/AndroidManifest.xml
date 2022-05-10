@@ -26,10 +26,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".tictac.TicTacToeGame"
+            android:exported="true"
+            android:label="Tic Tac Toe"
+            android:theme="@style/Theme.CustomLayouts"></activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.CustomLayouts" />
+            android:theme="@style/Theme.CustomLayouts"></activity>
     </application>
 
 </manifest>

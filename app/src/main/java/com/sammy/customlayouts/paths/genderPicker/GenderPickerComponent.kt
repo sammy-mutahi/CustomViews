@@ -73,7 +73,6 @@ fun GenderPickerComponent(
         targetValue = if (selectedGender is Gender.Female) 80f else 0f,
         animationSpec = tween(durationMillis = 500)
     )
-
     Canvas(
         modifier = modifier
             .pointerInput(true) {
