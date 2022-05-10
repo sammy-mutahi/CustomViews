@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf((milliseconds / 1000f) / 3600f + 2f)
                 }
 
-                LaunchedEffect(key1 = seconds){
+                LaunchedEffect(key1 = seconds) {
                     delay(1000L)
                     minutes += 1f / 60f
                     hours += 1f / (60f * 60f * 12f)
@@ -52,6 +52,20 @@ class MainActivity : ComponentActivity() {
                     hours = hours
                 )
             }
+
+            /*Box(modifier = Modifier.fillMaxSize()) {
+                Scale(
+                    style = ScaleStyle(
+                        scaleWidth = 150.dp
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .align(Alignment.BottomCenter)
+                ) {
+
+                }
+            }*/
         }
     }
 }
