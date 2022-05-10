@@ -14,4 +14,4 @@ Added some GIFs to also show some of the cool stuff that you can do with Canvas.
 
 Custom Clock | Custom Gender Picker
 --- | --- | ---
-<img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/clock.gif" width="280"/> | <img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/gender.gif" width="280"/>
+<img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/clock.gif" width="280"/> | <img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/picker.gif" width="280"/>
