@@ -10,6 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomLayouts">
         <activity
+            android:name=".paths.tictactoe.MainActivity"
+            android:exported="true"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.CustomLayouts">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".paths.PathActivity"
             android:exported="false"
             android:label="@string/title_activity_path"
@@ -18,12 +29,6 @@
             android:name=".paths.genderPicker.GenderPicker"
             android:exported="true"
             android:label="Gender Picker"
-            android:theme="@style/Theme.CustomLayouts">
-        </activity>
-        <activity
-            android:name=".tictac.TicTacToeGame"
-            android:exported="true"
-            android:label="Tic Tac Toe"
             android:theme="@style/Theme.CustomLayouts"></activity>
         <activity
             android:name=".MainActivity"
