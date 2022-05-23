@@ -12,6 +12,6 @@ Requirements
 
 Added some GIFs to also show some of the cool stuff that you can do with Canvas.
 
-CustomClock | CustomGenderPicker
---- | --- 
-<img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/clock.gif" width="280"/> | <img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/picker.gif" width="280"/>
+CustomClock | CustomGenderPicker | CustomWeightPicker
+--- | --- | ---  
+<img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/clock.gif" width="280"/> | <img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/picker.gif" width="280"/> | <img src="https://github.com/sammy-mutahi/CustomViews/blob/main/screenshots/weightpicker.gif" width="280"/>
