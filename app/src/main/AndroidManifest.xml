@@ -10,6 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomLayouts">
         <activity
+            android:name=".paths.towerofhanoi.TowerOfHanoiActivity"
+            android:exported="true"
+            android:label="@string/title_activity_tower_of_hanoi"
+            android:theme="@style/Theme.CustomLayouts">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".paths.tictactoe.MainActivity"
             android:exported="true"
             android:label="@string/title_activity_main"
@@ -29,7 +40,7 @@
             android:name=".paths.genderPicker.GenderPicker"
             android:exported="true"
             android:label="Gender Picker"
-            android:theme="@style/Theme.CustomLayouts"></activity>
+            android:theme="@style/Theme.CustomLayouts" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
