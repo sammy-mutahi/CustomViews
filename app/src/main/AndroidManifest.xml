@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomLayouts">
         <activity
-            android:name=".paths.towerofhanoi.TowerOfHanoiActivity"
+            android:name=".touch.TouchEventActivity"
             android:exported="true"
             android:label="@string/title_activity_tower_of_hanoi"
             android:theme="@style/Theme.CustomLayouts">
