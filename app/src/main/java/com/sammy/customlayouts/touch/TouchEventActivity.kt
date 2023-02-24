@@ -123,7 +123,7 @@ fun BallClicker(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(enabled) {
+                .pointerInput(key1 = enabled) {
                     if (!enabled) {
                         return@pointerInput
                     }
